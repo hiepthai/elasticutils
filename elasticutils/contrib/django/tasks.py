@@ -1,7 +1,7 @@
 import logging
 
 from django.conf import settings
-from celery.task import task
+from celery.task import shared_task
 
 from elasticutils.utils import chunked
 
@@ -9,7 +9,7 @@ from elasticutils.utils import chunked
 log = logging.getLogger('elasticutils')
 
 
-@task
+@shared_task
 def index_objects(mapping_type, ids, chunk_size=100, es=None, index=None):
     """Index documents of a specified mapping type.
 
@@ -65,7 +65,7 @@ def index_objects(mapping_type, ids, chunk_size=100, es=None, index=None):
             mapping_type.bulk_index(documents, id_field='id', es=es, index=index)
 
 
-@task
+@shared_task
 def unindex_objects(mapping_type, ids, es=None, index=None):
     """Remove documents of a specified mapping_type from the index.
 
